@@ -1,17 +1,35 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <h1>在线翻译</h1>
+    <h5>简单/便捷/易用</h5>
+   <translateForm v-on:formSubmit="translateText"></translateForm>
+   <translateOutput v-text="translatedText"></translateOutput>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import TranslateForm from './components/TranslateForm'
+import TranslateOutput from './components/TranslateOutput'
 
 export default {
   name: 'app',
+  data(){
+    return{
+      translatedText:""
+    }
+  },
   components: {
-    HelloWorld
+    TranslateForm,TranslateOutput
+  },
+  methods:{
+      translateText(text,language){
+        //alert(text);
+        this.$http.get('https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20190624T033609Z.879dfee5391e4e2c.64c6b2ca15bf961de69b7c053199a60b0e82e0d9&lang='+language+'&text='+text)
+          .then((response)=>{
+           //console.log(response.body.text[0]);
+            this.translatedText=response.body.text[0];
+          })
+      }
   }
 }
 </script>
